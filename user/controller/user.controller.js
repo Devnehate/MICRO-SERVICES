@@ -13,15 +13,17 @@ module.exports.register = async (req, res) => {
         }
 
         const hash = await bcrypt.hash(password, 10);
-        const newUser = new userModel({ name, email, password: hashedPassword });
+        const newUser = new userModel({ name, email, password: hash});
 
         await newUser.save();
 
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
+        delete newUser._doc.password;
+
         res.cookie('token', token);
 
-        res.send({ message: 'User created successfully' });
+        res.send({token,newUser});
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
@@ -44,9 +46,11 @@ module.exports.login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
+        delete user._doc.password;
+
         res.cookie('token', token);
 
-        res.send({ message: 'User logged in successfully' });
+        res.send({token,user});
 
     } catch (err) {
         res.status(500).send({ message: err.message });

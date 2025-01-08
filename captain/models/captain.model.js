@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const captainSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         select: false
-    }
+    },
+    isAvailable: {
+        type: Boolean,
+        default: false
+    },
 });
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('captain', captainSchema);
