@@ -28,4 +28,5 @@ module.exports.acceptRide = async (req, res, next) => {
     await ride.save();
     publishToQueue("ride-accepted", JSON.stringify(ride))
     res.send(ride);
+    
 }
